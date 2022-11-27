@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Заказ №{{ order.id_O }}
+{% endblock %}
+
+{% block body %}
+<div class = "container mt-5">
+    <h1>Заказ №{{ order.id_O }}</h1>
+    <div class="alert alert-info">
+        <h2>ID Заказа: <b>{{ order.id_O }}</b></h2>
+        <p>Цена: <b>{{ order.cost }}</b></p>
+        <p>Статус заказа: <b>{{ order.state }}</b></p>
+        <p>ID заказчика: <b>{{ order.Users_id_U }}</b></p>
+        <p>Имя заказчика: <b>{{ User.name }}</b></p>
+        <p>Фамилия заказчика: <b>{{ User.surname }}</b></p>
+        <p>Почта заказчика: <b>{{ User.email }}</b></p>
+        <p>Мастер: <b> {{ Master.surname }} {{ Master.name }}</b></p>
+        <a class="btn btn-warning" href="/orders/{{ order.id_O }}/update">Редактировать статус</a>
+        <a class="btn btn-danger" href="/orders/{{ order.id_O }}/delete">Удалить заказ</a>
+        <a class="btn btn-dark" href="/orders">Назад</a>
+    </div>
+</div>
+{% endblock %}
