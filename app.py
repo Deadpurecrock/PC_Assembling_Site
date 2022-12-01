@@ -103,6 +103,49 @@ def index():
     return render_template("index.html")
 
 
+@app.route('/auth', methods=['POST', 'GET'])
+def auth():
+    if request.method == 'POST':
+        login = request.form['login']
+        password = request.form['password']
+        User = Users.query.filter_by(email=login).first();
+        Master = Masters.query.filter_by(email=login).first();
+
+        if (User is not None) and (login == User.email):
+            if password == User.passw:
+                return redirect('/orders', name=User.name)
+            else:
+                return "Неверный пароль!"
+        elif (Master is not None) and (login == Master.email):
+            if password == Master.passw:
+                return redirect('/add-order', name=Master.name)
+            else:
+                return "Неверный пароль!"
+        else:
+            return login + " - Неверный логин! Вы можете зарегистрироваться, написав" \
+                           "на нашу корпоративную почту: admin@pc-assembler.ru"
+
+    else:
+        return render_template("authorisation.html")
+
+
+# return login + " - Неверный логин! Вы можете зарегистрироваться, написав " \
+#                          "на нашу корпоративную почту: admin@pc-assembler.ru"
+#      try:
+#           for master in Masters:
+#               if user.login == Masters.email:
+#                   Master = Masters.query.filter_by(Masters.email=user.login).first()
+#                      return redirect('/orders')
+#          for users in Users:
+#              if user.login == Users.email:
+#                  if user.password == Users.passw:
+#                      User = Users.query.get(user.login)
+#     except:
+#         return "Oops"
+# else:
+#    return render_template("authorisation.html")
+
+
 @app.route('/orders')
 def orders():
     # пример сортировки: orders = Orders.query.order_by(Orders.поле).all()
