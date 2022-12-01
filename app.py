@@ -108,12 +108,7 @@ class Messages(db.Model):
 db.create_all()
 
 
-@app.route('/')
-@app.route('/home')
-def index():
-    return render_template("index.html")
-
-
+@app.route('/', methods=['POST', 'GET'])
 @app.route('/auth', methods=['POST', 'GET'])
 def auth():
     if request.method == 'POST':
