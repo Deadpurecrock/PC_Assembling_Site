@@ -16,7 +16,7 @@
         <p>Фамилия заказчика: <b>{{ User.surname }}</b></p>
         <p>Почта заказчика: <b>{{ User.email }}</b></p>
         <p>Мастер: <b> {{ Master.surname }} {{ Master.name }}</b></p>
-        <a class="btn btn-warning" href="/orders/{{ order.id_O }}/update">Редактировать статус</a>
+        <a class="btn btn-warning" href="/orders/update/{{ order.id_O }}{{Master.id_M}}">Редактировать статус</a>
         <a class="btn btn-danger" href="/orders/{{ order.id_O }}/delete">Удалить заказ</a>
         <a class="btn btn-dark" href="{{ url_for('.orders', Master=Master) }}">Назад</a>
     </div>

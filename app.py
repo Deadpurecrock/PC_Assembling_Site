@@ -156,8 +156,8 @@ def user_order():
 def orders_detail(id_O, Users_id_U):
     order = Orders.query.get(id_O)
     User = Users.query.get(Users_id_U)
-    Master = Masters.query.filter_by(Orders_id_O=order.id_O).first()
-    return render_template("orders-detail.html", order=order, User=User, Master=Master)
+    Master3 = Masters.query.filter_by(Orders_id_O=order.id_O).first()
+    return render_template("orders-detail.html", order=order, User=User, Master=Master3)
 
 
 @app.route('/orders/<int:id_O>/delete')
@@ -171,8 +171,9 @@ def orders_delete(id_O):
         return "При удалении статьи произошла ошибка :("
 
 
-@app.route('/orders/<int:id_O>/update', methods=['POST', 'GET'])
-def order_update(id_O):
+@app.route('/orders/update/<int:id_O><int:id_Mast>', methods=['POST', 'GET'])
+def order_update(id_O, id_Mast):
+    Master = Masters.query.filter_by(id_M=id_Mast).first()
     order = Orders.query.get(id_O)
     if request.method == 'POST':
         order.state = request.form['state']
@@ -183,7 +184,7 @@ def order_update(id_O):
         except:
             return "При обновлении статуса заказа произошла ошибка :("
     else:
-        return render_template("order_update.html", order=order)
+        return render_template("order_update.html", order=order, Master=Master)
 
 
 @app.route('/add-order/', methods=['POST', 'GET'])
