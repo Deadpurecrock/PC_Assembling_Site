@@ -18,16 +18,13 @@
           <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap"><use xlink:href="#bootstrap"></use></svg>
         </a>
         <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-          </li><a class="btn btn-success" href="/add-order">Добавить заказ</a></li>
-          </li><a class="btn btn-warning" href="/orders">Заказы</a></li>
+          </li><a class="btn btn-info" href="{{ url_for('.chat_master', Master=Master) }}">Сообщения</a></li>
+          </li><a class="btn btn-success" href="{{ url_for('.add_order', Master=Master) }}">Добавить заказ</a></li>
+          </li><a class="btn btn-warning" href="{{ url_for('.orders', Master=Master) }}">Заказы</a></li>
         </ul>
-
-        <!-- <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search">
-          <input type="search" class="form-control form-control-dark text-bg-dark" placeholder="Search..." aria-label="Search">
-        </form> -->
-
+        <h4>{{ Master.name }} {{ Master.surname }} </h4>
         <div class="text-end">
-          <a class="btn btn-outline-light me-2" href="/auth">Вход</a>
+          <a class="btn btn-outline-light me-2" href="/auth">Выход</a>
         </div>
       </div>
     </div>

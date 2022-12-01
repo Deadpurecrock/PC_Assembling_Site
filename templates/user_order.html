@@ -1,27 +1,23 @@
-{% extends 'base.html' %}
+{% extends 'base_user.html' %}
 
-{% block title %}
-Страница просмотра заказов
-{% endblock %}
+{% block title %}Общение{% endblock %}
 
 {% block body %}
 <div class = "container mt-5">
-    <h1>Здравствуйте, {{ Master.name }}!</h1>
-    <h1>Просмотр заказов</h1>
-
+     <h1>Здравствуйте, {{ User.name }}!</h1>
+    <h1>Ваши заказы:</h1>
+    <hr>
     {% if orders|length > 0 %}
-
         {% for order in orders %}
         <div class="alert alert-info">
             <h2>ID Заказа: <b>{{ order.id_O }}</b></h2>
             <p>Цена: <b>{{ order.cost }}</b></p>
             <p>Статус заказа: <b>{{ order.state }}</b></p>
             <p>ID заказчика: <b>{{ order.Users_id_U }}</b></p>
-            <a href="orders/{{ order.id_O }}{{ order.Users_id_U }}" class="btn btn-primary">Детальнее</a>
         </div>
         {% endfor %}
     {% else %}
-    <p>Нет заказов на данный момент</p>
+        <p>Вами не было сделано ни одного заказа. Сделайте заказ прямо сейчас! Обращайтесь на нашу корпоративную почту: admin@pc-assembler.ru</p>
     {% endif %}
 
 </div>

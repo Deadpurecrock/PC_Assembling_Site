@@ -1,5 +1,6 @@
 from flask import Flask, render_template, url_for, request, redirect
 from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
 
 app = Flask(__name__)
 app.app_context().push()
@@ -94,6 +95,16 @@ class log_tab(db.Model):
     O_state = db.Column(db.String(200), nullable=False)
 
 
+class Messages(db.Model):
+    id_Msg = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(50), nullable=False)
+    email = db.Column(db.String(100), nullable=False)
+    message = db.Column(db.Text, nullable=False)
+    time = db.Column(db.DateTime, default=datetime.utcnow)
+
+    def __repr__(self):
+        return '<Messages %r>' % self.id_Msg
+
 db.create_all()
 
 
@@ -113,12 +124,12 @@ def auth():
 
         if (User is not None) and (login == User.email):
             if password == User.passw:
-                return redirect('/orders', name=User.name)
+                return redirect(url_for('chat', User=User))
             else:
                 return "Неверный пароль!"
         elif (Master is not None) and (login == Master.email):
             if password == Master.passw:
-                return redirect('/add-order', name=Master.name)
+                return redirect(url_for('add_order', Master=Master))
             else:
                 return "Неверный пароль!"
         else:
@@ -129,29 +140,21 @@ def auth():
         return render_template("authorisation.html")
 
 
-# return login + " - Неверный логин! Вы можете зарегистрироваться, написав " \
-#                          "на нашу корпоративную почту: admin@pc-assembler.ru"
-#      try:
-#           for master in Masters:
-#               if user.login == Masters.email:
-#                   Master = Masters.query.filter_by(Masters.email=user.login).first()
-#                      return redirect('/orders')
-#          for users in Users:
-#              if user.login == Users.email:
-#                  if user.password == Users.passw:
-#                      User = Users.query.get(user.login)
-#     except:
-#         return "Oops"
-# else:
-#    return render_template("authorisation.html")
-
-
 @app.route('/orders')
 def orders():
-    # пример сортировки: orders = Orders.query.order_by(Orders.поле).all()
-
+    Master = request.args['Master']
+    Master1 = Master[9] + Master[10]
+    Master2 = Masters.query.filter_by(id_M=Master1).first()
     orders = Orders.query.all()
-    return render_template("orders.html", orders=orders)
+    return render_template("orders.html", orders=orders, Master=Master2)
+
+@app.route('/user-order')
+def user_order():
+    User = request.args['User']
+    User1 = User[7] + User[8]
+    User2 = Users.query.filter_by(id_U=User1).first()
+    orders = Orders.query.filter_by(Users_id_U=User1).all()
+    return render_template("user_order.html", orders=orders, User=User2)
 
 
 @app.route('/orders/<int:id_O><int:Users_id_U>')
@@ -188,14 +191,16 @@ def order_update(id_O):
         return render_template("order_update.html", order=order)
 
 
-@app.route('/add-order', methods=['POST', 'GET'])
+@app.route('/add-order/', methods=['POST', 'GET'])
 def add_order():
+    Master = request.args['Master']
+    Master1 = Master[9] + Master[10]
+    Master2 = Masters.query.filter_by(id_M=Master1).first()
     if request.method == 'POST':
         state = request.form['state']
         Users_id_U = request.form['Users_id_U']
         cost = request.form['cost']
         ord = Orders(state=state, Users_id_U=Users_id_U, cost=cost)
-
         try:
             db.session.add(ord)
             db.session.commit()
@@ -203,13 +208,59 @@ def add_order():
         except:
             return "При добавлении заказа произошла ошибка :("
     else:
-        return render_template("add_order.html")
+        return render_template("add_order.html", Master=Master2)
 
 
-@app.route('/user/<string:name>/<int:id>')
-def user(name, id):
-    return 'Page of User: ' + name + " with id:" + str(id)
+@app.route('/chat', methods=['POST', 'GET'])
+def chat():
+    User = request.args['User']
+    User1 = User[7] + User[8]
+    User2 = Users.query.filter_by(id_U=User1).first()
+    messages = Messages.query.order_by(Messages.time).all()
+    if request.method == "POST":
+        username = request.form['username']
+        email = request.form['email']
+        message = request.form['message']
+        msg = Messages(username=username, email=email, message=message)
+        try:
+            db.session.add(msg)
+            db.session.commit()
+            return redirect(url_for('chat', User=User))
+        except:
+            return "При отправке сообщения произошла ошибка :("
+    else:
+        return render_template("chat_user.html", User=User2, messages=messages)
 
+@app.route('/chat-master', methods=['POST', 'GET'])
+def chat_master():
+    Master = request.args['Master']
+    Master1 = Master[9] + Master[10]
+    Master2 = Masters.query.filter_by(id_M=Master1).first()
+    messages = Messages.query.order_by(Messages.id_Msg).all()
+    if request.method == "POST":
+        username = request.form['username']
+        email = request.form['email']
+        message = request.form['message']
+        msg = Messages(username=username, email=email, message=message)
+        try:
+            db.session.add(msg)
+            db.session.commit()
+            return redirect(url_for('chat_master', Master=Master2))
+        except:
+            return "При отправке сообщения произошла ошибка :("
+    else:
+        return render_template("chat_master.html", Master=Master2, messages=messages)
+
+@app.route('/chat-master/<int:id_Msg>/<int:id_Mast>/delete')
+def messages_delete(id_Msg, id_Mast):
+    Master = Masters.query.filter_by(id_M=id_Mast).first()
+    msg = Messages.query.get_or_404(id_Msg)
+    try:
+        db.session.delete(msg)
+        db.session.commit()
+        return redirect(url_for('chat_master', Master=Master))
+    except:
+        return "При удалении сообщения произошла ошибка :("
 
 if __name__ == "__main__":
     app.run(debug=True)

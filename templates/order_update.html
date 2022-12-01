@@ -9,7 +9,7 @@
     <h1>Обновление статуса заказа</h1>
     <form method="post">
         <input type="text" name="state" id="state" value="{{ order.state }}" placeholder="Введите новое состояние заказа" class = "form-control"><br>
-        <textarea type="text" name="Users_id_U" id="Users_id_U" placeholder="ID заказчика (пользователя)" class = "form-control"></textarea><br>
+        <textarea type="text" name="Users_id_U" id="Users_id_U" value="{{ order.Users_id_U }}" placeholder="ID заказчика (пользователя)" class = "form-control"></textarea><br>
         <input type="text" name="cost" id="cost" value ="{{ order.cost }}" placeholder="Введите цену заказа, если изменилась" class = "form-control"><br>
         <input type="submit" class = "btn btn-success" value="Обновить"><br>
     </form>
