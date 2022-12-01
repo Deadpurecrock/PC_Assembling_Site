@@ -4,8 +4,10 @@
 
 {% block body %}
 <div class = "container mt-5">
-     <h1>Здравствуйте, {{ User.name }}!</h1>
+    <h1>Здравствуйте, {{ User.name }}!</h1>
+    <hr>
     <h2>Отправьте сообщение:</h2>
+    <hr>
     <form method="post">
         <input type = "text" name="username" id="username" class = "form-control" value="{{ User.name }} {{User.surname}}" placeholder="Введите своё имя"><br>
         <input type = "text" name="email" id="email" class = "form-control" value="{{ User.email }}"placeholder="Введите свой e-mail для обратной связи"><br>

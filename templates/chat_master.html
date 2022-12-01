@@ -5,6 +5,7 @@
 {% block body %}
 <div class = "container mt-5">
     <h1>Здравствуйте, {{ Master.name }}!</h1>
+    <hr>
     <h2>Отправьте сообщение:</h2>
     <form method="post">
         <input type = "text" name="username" id="username" class = "form-control" value="{{ Master.name }} {{Master.surname}}" placeholder="Введите своё имя"><br>

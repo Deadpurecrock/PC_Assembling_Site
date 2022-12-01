@@ -7,8 +7,9 @@
 {% block body %}
 <div class = "container mt-5">
     <h1>Здравствуйте, {{ Master.name }}!</h1>
+    <hr>
     <h1>Просмотр заказов</h1>
-
+    <hr>
     {% if orders|length > 0 %}
 
         {% for order in orders %}
