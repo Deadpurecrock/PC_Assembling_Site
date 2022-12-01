@@ -204,7 +204,7 @@ def add_order():
         try:
             db.session.add(ord)
             db.session.commit()
-            return redirect('/orders')
+            return redirect(url_for('orders', Master=Master))
         except:
             return "При добавлении заказа произошла ошибка :("
     else:
