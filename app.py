@@ -105,6 +105,7 @@ class Messages(db.Model):
     def __repr__(self):
         return '<Messages %r>' % self.id_Msg
 
+
 db.create_all()
 
 
@@ -143,6 +144,7 @@ def orders():
     orders = Orders.query.all()
     return render_template("orders.html", orders=orders, Master=Master2)
 
+
 @app.route('/user-order')
 def user_order():
     User = request.args['User']
@@ -152,26 +154,28 @@ def user_order():
     return render_template("user_order.html", orders=orders, User=User2)
 
 
-@app.route('/orders/<int:id_O><int:Users_id_U>')
-def orders_detail(id_O, Users_id_U):
+@app.route('/orders/<int:id_O><int:Users_id_U>/<int:id_Mast>')
+def orders_detail(id_O, Users_id_U, id_Mast):
     order = Orders.query.get(id_O)
     User = Users.query.get(Users_id_U)
-    Master3 = Masters.query.filter_by(Orders_id_O=order.id_O).first()
-    return render_template("orders-detail.html", order=order, User=User, Master=Master3)
+    Master1 = Masters.query.filter_by(Orders_id_O=order.id_O).first()
+    Master = Masters.query.filter_by(id_M=id_Mast).first()
+    return render_template("orders-detail.html", order=order, User=User, Master1=Master1, Master=Master)
 
 
-@app.route('/orders/<int:id_O>/delete')
-def orders_delete(id_O):
+@app.route('/orders/<int:id_O>/<int:id_Mast>/delete')
+def orders_delete(id_O, id_Mast):
+    Master = Masters.query.filter_by(id_M=id_Mast).first()
     order = Orders.query.get_or_404(id_O)
     try:
         db.session.delete(order)
         db.session.commit()
-        return redirect("/orders")
+        return redirect(url_for('orders', Master=Master))
     except:
         return "При удалении статьи произошла ошибка :("
 
 
-@app.route('/orders/update/<int:id_O><int:id_Mast>', methods=['POST', 'GET'])
+@app.route('/orders/update/<int:id_O>/<int:id_Mast>', methods=['POST', 'GET'])
 def order_update(id_O, id_Mast):
     Master = Masters.query.filter_by(id_M=id_Mast).first()
     order = Orders.query.get(id_O)
@@ -180,7 +184,7 @@ def order_update(id_O, id_Mast):
         order.cost = request.form['cost']
         try:
             db.session.commit()
-            return redirect('/orders')
+            return redirect(url_for('orders', Master=Master))
         except:
             return "При обновлении статуса заказа произошла ошибка :("
     else:
@@ -227,6 +231,7 @@ def chat():
     else:
         return render_template("chat_user.html", User=User2, messages=messages)
 
+
 @app.route('/chat-master', methods=['POST', 'GET'])
 def chat_master():
     Master = request.args['Master']
@@ -247,6 +252,7 @@ def chat_master():
     else:
         return render_template("chat_master.html", Master=Master2, messages=messages)
 
+
 @app.route('/chat-master/<int:id_Msg>/<int:id_Mast>/delete')
 def messages_delete(id_Msg, id_Mast):
     Master = Masters.query.filter_by(id_M=id_Mast).first()
@@ -257,6 +263,7 @@ def messages_delete(id_Msg, id_Mast):
         return redirect(url_for('chat_master', Master=Master))
     except:
         return "При удалении сообщения произошла ошибка :("
+
 
 if __name__ == "__main__":
     app.run(debug=True)

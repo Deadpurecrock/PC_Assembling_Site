@@ -15,10 +15,10 @@
         <p>Имя заказчика: <b>{{ User.name }}</b></p>
         <p>Фамилия заказчика: <b>{{ User.surname }}</b></p>
         <p>Почта заказчика: <b>{{ User.email }}</b></p>
-        <p>Мастер: <b> {{ Master.surname }} {{ Master.name }}</b></p>
-        <a class="btn btn-warning" href="/orders/update/{{ order.id_O }}{{Master.id_M}}">Редактировать статус</a>
-        <a class="btn btn-danger" href="/orders/{{ order.id_O }}/delete">Удалить заказ</a>
-        <a class="btn btn-dark" href="{{ url_for('.orders', Master=Master) }}">Назад</a>
+        <p>Мастер: <b> {{ Master1.surname }} {{ Master1.name }}</b></p>
+        <a class="btn btn-warning" href="/orders/update/{{ order.id_O }}/{{Master.id_M}}">Редактировать статус</a>
+        <a class="btn btn-danger" href="/orders/{{ order.id_O }}/{{ Master.id_M }}/delete">Удалить заказ</a>
+        <a class="btn btn-dark" href="{{ url_for('.orders', Master=Master )}}">Назад</a>
     </div>
 </div>
 {% endblock %}
